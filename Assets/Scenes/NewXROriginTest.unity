@@ -1004,7 +1004,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3862376420796017147, guid: 0c443cdd8d89cf241911df7b9c4d2076, type: 3}
       propertyPath: m_Name
-      value: XR Origin (VR)
+      value: XR Origin (Climb)
       objectReference: {fileID: 0}
     - target: {fileID: 7350261731245355981, guid: 0c443cdd8d89cf241911df7b9c4d2076, type: 3}
       propertyPath: m_LocalPosition.x
