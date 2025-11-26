@@ -55,7 +55,7 @@ public class PlayerMovement : MonoBehaviour
         if (state == PlayerState.Falling && isGrounded)
         {
             state = PlayerState.Landing;
-            StartCoroutine(LandingSequence());
+            StartCoroutine(LandingSequence());//착지 동작 시작
             return;
         }
     }
