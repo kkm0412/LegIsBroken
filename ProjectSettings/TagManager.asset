@@ -13,8 +13,8 @@ TagManager:
   - UI
   - Ground
   - EditorOnlyVisual
-  - 
-  - 
+  - PlayerBody
+  - PlayerHand
   - 
   - 
   - 
