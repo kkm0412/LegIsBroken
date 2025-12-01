@@ -8,12 +8,12 @@ public class HandMoveProvider : MonoBehaviour
     [SerializeField] private InputActionReference grabAction;
     [SerializeField] private Rigidbody playerRigidbody;
 
-    [Header("Phase 2 Prep: Physics Hand")]
-    [Tooltip("비워두면 현재 컨트롤러 위치를 사용합니다. 나중에 Physics Hand를 여기에 넣을 예정입니다.")]
+    [Tooltip("물리 손, 없으면 현재 트랜스폼 위치를 사용")]
     public Transform handTrackingTransform;
 
     [Header("Physics Options")]
     [Tooltip("이동 감도 (1.0 = 정직함, 1.5 = 빠름)")]
+    [Range(0.5f, 3f)]
     public float sensitivity = 1.3f;
     [Tooltip("움직임 부드러움 정도")]
     [Range(0.1f, 1f)]
@@ -24,7 +24,7 @@ public class HandMoveProvider : MonoBehaviour
 
     [Header("limits")]
     public bool allowVerticalMovement = true;
-    public float maxVelocity = 15f; // 너무 빠르면 물리 뚫림 발생하므로 제한
+    public float maxVelocity = 20f; // 너무 빠르면 물리 뚫림 발생하므로 제한
 
     [Header("GrabAbles")]
     public LayerMask grabLayer;
@@ -38,7 +38,8 @@ public class HandMoveProvider : MonoBehaviour
 
     // 던지기 방향 보정용 (평균값 계산)
     private Queue<Vector3> velocityHistory = new Queue<Vector3>();
-    private int historyLength = 5; // X프레임 평균 사용
+    [Tooltip("던지는 프레임 계산용, 이상한 방향으로 튀면 수치 높이기")]
+    public int historyLength = 5; // X프레임 평균 사용
 
     private static int grabbingHandCount = 0;
 
@@ -95,6 +96,8 @@ public class HandMoveProvider : MonoBehaviour
         // 속도 계산
         Vector3 targetVelocity = (handDelta / Time.fixedDeltaTime) * sensitivity;
 
+        //
+
         // 최대 속도 제한 (튀는 거 방지)
         if (targetVelocity.magnitude > maxVelocity)
         {
@@ -124,7 +127,7 @@ public class HandMoveProvider : MonoBehaviour
         velocityHistory.Enqueue(v);
     }
 
-    Vector3 GetAverageVelocity()     // 기록된 속도들의 평균을 구함 (손떨림 보정)
+    Vector3 GetAverageVelocity() 
     {
         if (velocityHistory.Count == 0) return Vector3.zero;
         Vector3 sum = Vector3.zero;
