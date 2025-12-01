@@ -11,7 +11,7 @@ public class HandMoveProvider : MonoBehaviour
     [Header("Phase 2 Prep: Physics Hand")]
     [Tooltip("비워두면 현재 컨트롤러 위치를 사용합니다. 나중에 Physics Hand를 여기에 넣을 예정입니다.")]
     public Transform handTrackingTransform;
-    
+
     [Header("Physics Options")]
     [Tooltip("이동 감도 (1.0 = 정직함, 1.5 = 빠름)")]
     public float sensitivity = 1.3f;
@@ -42,6 +42,15 @@ public class HandMoveProvider : MonoBehaviour
 
     private static int grabbingHandCount = 0;
 
+    void Awake()
+    {
+        // trackingTransform이 없으면 자기 자신(컨트롤러)을 사용
+        if (handTrackingTransform == null)
+            currentHand = transform;
+        else
+            currentHand = handTrackingTransform;
+    }
+
     void OnEnable()
     {
         if (grabAction != null)
@@ -70,38 +79,20 @@ public class HandMoveProvider : MonoBehaviour
     {
         if (isGrabbing)
         {
-            // 손 이동량 계산
-            Vector3 handDelta = previousHandPos - transform.position;
-
-            // 속도 계산
-            Vector3 targetVelocity = handDelta / Time.fixedDeltaTime * sensitivity;
-
-            // 바닥 체크 (발밑 0.1m 레이캐스트)
-            // LayerMask는 스크립트의 grabLayer를 재활용 or 새로 구축
-            bool isFeetOnGround = Physics.Raycast(playerRigidbody.position + Vector3.up * 0.1f, Vector3.down, 0.2f, grabLayer);
-
-            if (isFeetOnGround && targetVelocity.y < 0)
-            {
-                // 아래로 가는 속도만 0으로 만듦 (앞뒤좌우는 허용)
-                targetVelocity.y = 0;
-            }
-
-            // 속도 적용
-            playerRigidbody.linearVelocity = targetVelocity;
+            ApplyClimbingLogic();
         }
 
         previousHandPos = transform.position;
     }
 
-    void ApplyClimbingMovement()
+    private void ApplyClimbingLogic()
     {
         // 손 이동량 계산
-        Vector3 handDelta = previousHandPos - transform.position;
-
-        // Y축 제한 (필요시)
+        Vector3 handDelta = previousHandPos - currentHand.position;
+        
         if (!allowVerticalMovement) handDelta.y = 0;
 
-        // 목표 속도 계산
+        // 속도 계산
         Vector3 targetVelocity = (handDelta / Time.fixedDeltaTime) * sensitivity;
 
         // 최대 속도 제한 (튀는 거 방지)
@@ -110,29 +101,30 @@ public class HandMoveProvider : MonoBehaviour
             targetVelocity = targetVelocity.normalized * maxVelocity;
         }
 
+        // 바닥 체크 (발밑 0.1m 레이캐스트)
+        // LayerMask는 스크립트의 grabLayer를 재활용 or 새로 구축
+        bool isFeetOnGround = Physics.Raycast(playerRigidbody.position + Vector3.up * 0.1f, Vector3.down, 0.2f, grabLayer);
+        if (isFeetOnGround && targetVelocity.y < 0)
+        {
+            // 아래로 가는 속도만 0으로 만듦 (앞뒤좌우는 허용)
+            targetVelocity.y = 0;
+        }
         // Smoothness 값으로 조절 가능, Lerp없을시 튐, 수치 낮을시 답답함
-
         Vector3 smoothedVelocity = Vector3.Lerp(playerRigidbody.linearVelocity, targetVelocity, movementSmoothness);
-
-        // Unity 버전에 따른 속도 적용
-
+        //최종 속도 적용
         playerRigidbody.linearVelocity = smoothedVelocity;
-
-
         //던지기 방향 안정화를 위해 속도 기록
         RecordVelocity(targetVelocity);
     }
 
-    // "이상한 방향"으로 튀는 걸 막기 위해 평균 속도를 기록
-    void RecordVelocity(Vector3 v)
+    void RecordVelocity(Vector3 v)     // "이상한 방향"으로 튀는 걸 막기 위해 평균 속도를 기록
     {
         if (velocityHistory.Count >= historyLength)
             velocityHistory.Dequeue();
         velocityHistory.Enqueue(v);
     }
 
-    // 기록된 속도들의 평균을 구함 (손떨림 보정)
-    Vector3 GetAverageVelocity()
+    Vector3 GetAverageVelocity()     // 기록된 속도들의 평균을 구함 (손떨림 보정)
     {
         if (velocityHistory.Count == 0) return Vector3.zero;
         Vector3 sum = Vector3.zero;
@@ -143,7 +135,8 @@ public class HandMoveProvider : MonoBehaviour
     void StartGrab()
     {
         isGrabbing = true;
-        previousHandPos = transform.position;
+        previousHandPos = currentHand.position;
+
         grabbingHandCount++;
         velocityHistory.Clear(); // 기록 초기화
 
