@@ -8,10 +8,13 @@ public class HandMoveProvider : MonoBehaviour
     [SerializeField] private InputActionReference grabAction;
     [SerializeField] private Rigidbody playerRigidbody;
 
+    [Header("Phase 2 Prep: Physics Hand")]
+    [Tooltip("비워두면 현재 컨트롤러 위치를 사용합니다. 나중에 Physics Hand를 여기에 넣을 예정입니다.")]
+    public Transform handTrackingTransform;
+    
     [Header("Physics Options")]
     [Tooltip("이동 감도 (1.0 = 정직함, 1.5 = 빠름)")]
     public float sensitivity = 1.3f;
-
     [Tooltip("움직임 부드러움 정도")]
     [Range(0.1f, 1f)]
     public float movementSmoothness = 0.6f;
@@ -31,6 +34,7 @@ public class HandMoveProvider : MonoBehaviour
     private bool isPressed = false;
     private bool isGrabbing = false;
     private Vector3 previousHandPos;
+    private Transform currentHand;
 
     // 던지기 방향 보정용 (평균값 계산)
     private Queue<Vector3> velocityHistory = new Queue<Vector3>();
