@@ -14,6 +14,7 @@ public class BoostButton : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             boosted = true;
+            car.isRunning = true;
             car.moveSpeed *= boostMultiplier;  
             Debug.Log("BOOST ACTIVATED!");
         }

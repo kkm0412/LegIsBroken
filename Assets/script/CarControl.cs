@@ -5,6 +5,7 @@ using UnityEngine;
 public class CarControl : MonoBehaviour
 {
     [Header("주행 설정")]
+    public bool isRunning = false;
     public float moveSpeed = 5f;
     public float turnSpeed = 5f;
     public float turnSmoothness = 5f;
@@ -23,6 +24,8 @@ public class CarControl : MonoBehaviour
 
     void Update()
     {
+        if (!isRunning) return;
+
         float horizontal = 0f;
         float speed = moveSpeed;
 

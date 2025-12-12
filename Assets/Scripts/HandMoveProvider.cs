@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.XR;
 using UnityEngine.InputSystem;
 using System.Collections.Generic; // 평균값 계산용
+using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.Interaction.Toolkit.Interactors;
 
 public class HandMoveProvider : MonoBehaviour
 {
@@ -10,6 +12,9 @@ public class HandMoveProvider : MonoBehaviour
 
     [Tooltip("물리 손, 없으면 현재 트랜스폼 위치를 사용")]
     public Transform handTrackingTransform;
+
+    [Tooltip("Near-far Interactor 연결")]
+    public XRBaseInteractor handInteractor;     //물건 잡을 때 작동 안하게 하기 위해서
 
     [Header("Physics Options")]
     [Tooltip("이동 감도 (1.0 = 정직함, 1.5 = 빠름)")]
@@ -69,7 +74,14 @@ public class HandMoveProvider : MonoBehaviour
     }
 
     void Update()
-    {
+    {   
+        //손에 물건 쥐고있으면 그 손으로 바닥 이동 X
+        if(handInteractor != null && handInteractor.hasSelection)
+        {
+            if (isGrabbing) EndGrab();
+            return;
+        }
+
         bool isTouching = Physics.CheckSphere(transform.position, grabRadius, grabLayer);
 
         if (isPressed && isTouching && !isGrabbing) StartGrab();

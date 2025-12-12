@@ -2449,11 +2449,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f20e14f368adcd4e94530364a1e46ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controlPoints:
-  - {fileID: 1159159471}
-  - {fileID: 749098240}
-  - {fileID: 1814462758}
-  - {fileID: 0}
 --- !u!4 &782024874
 Transform:
   m_ObjectHideFlags: 0
@@ -3655,6 +3650,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa9611b5166a53741bb22c9de2ae990b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isRunning: 0
   moveSpeed: 20
   turnSpeed: 5
   turnSmoothness: 5
@@ -5064,7 +5060,7 @@ GameObject:
   m_Layer: 0
   m_Name: player
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -5178,8 +5174,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1606c1e5dc57c1e4f9ae6c2d1b5bdfca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rightHand: {fileID: 0}
-  target: {fileID: 0}
 --- !u!4 &2066263226 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: ef63e826ce0e5e94fa9002fc1c038b66, type: 3}
