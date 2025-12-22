@@ -50,6 +50,9 @@ LEGS를 잡은 상태로 검지 트리거를 눌러 작동시킵니다.
 Gemini가 생성한 코드, 노멀맵, 이미지
 
 스카이박스: https://assetstore.unity.com/packages/vfx/shaders/free-skybox-extended-shader-107400
+
 맵 소스: https://assetstore.unity.com/packages/3d/environments/landscapes/low-poly-desert-environment-pack-333554
+
 도로: https://assetstore.unity.com/packages/3d/environments/roadways/low-poly-road-pack-67288
+
 차량: https://assetstore.unity.com/packages/3d/vehicles/land/free-pickup-273052 
