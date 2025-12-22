@@ -5,7 +5,7 @@
 ## 개발 팀 (Development Team)
 | 이름 (Name) | Github / Contact |
 | :---  | :--- |
-| **김규민** |  [@kkm0412](Link) |
+| **김규민** |  [@kkm0412]([Link](https://github.com/kkm0412)) |
 | **김대원** |  [@GithubID](Link) |
 
 ## 게임 소개
@@ -48,6 +48,7 @@ LEGS를 잡은 상태로 검지 트리거를 눌러 작동시킵니다.
 
 ## 사용한 리소스
 Gemini가 생성한 코드, 노멀맵, 이미지
+
 스카이박스: https://assetstore.unity.com/packages/vfx/shaders/free-skybox-extended-shader-107400
 맵 소스: https://assetstore.unity.com/packages/3d/environments/landscapes/low-poly-desert-environment-pack-333554
 도로: https://assetstore.unity.com/packages/3d/environments/roadways/low-poly-road-pack-67288
