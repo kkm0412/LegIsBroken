@@ -1,17 +1,16 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SceneChanger : MonoBehaviour
 {
-    //선언부
-    //메인메뉴 씬, 등반 씬 선언
-    //텔레포터(콜라이더)
+    
+    public int sceneIndex;
 
-    //메인메뉴에서 캐릭터가 떨어져서 텔레포터(콜라이더)와 부딪힐시
-    //다음씬으로 넘어감
-
-    //다음씬으로 넘어갈시 플레이어는 떨어지면서 바닥에 닿아야함.
-    //바닥에 닿을시 뼈가 부러지는 기능을 넣어야 함
-    //플레이어 스텟에서 bool을 사용하여 구현
-    //
-    //
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            SceneManager.LoadScene(sceneIndex);
+        }
+    }
 }

@@ -1,44 +1,46 @@
-using System.Collections;
-using UnityEditor.EditorTools;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
+[RequireComponent(typeof(Rigidbody), typeof(XRGrabInteractable))]
 public class FakeClimbAble : MonoBehaviour
 {
-    
-    [Tooltip("플레이어 손 정보 넣어놓기")]
-    [SerializeField] private GameObject hand;
+    private Rigidbody rb;
+    private XRGrabInteractable interactable;
 
-    [Tooltip("부서지는 소리")]
-    [SerializeField] private AudioClip breakSound;
-
-    private bool isGrabbed = false; //손 반응(안 쓸수도 있음)
-
-    private void Awake()
+    void Awake()
     {
-        isGrabbed = false;
+        rb = GetComponent<Rigidbody>();
+        interactable = GetComponent<XRGrabInteractable>();
+
+        //물리엔진 끄기
+        rb.isKinematic = true; 
     }
 
-    //Issue: 충돌로 구현했는데 잡았을 때로 교체할수도 있음!
-    private void OnTriggerEnter(Collider other)
+    void OnEnable()
     {
-        if (other == hand)
-        {
-            BlockBreaks();
-        }
+        interactable.selectEntered.AddListener(OnGrab);
+        interactable.selectExited.AddListener(OnRelease);
     }
 
-    private IEnumerator BlockBreaks()
+    void OnDisable()
     {
-        //부서지는 소리 재생
-        //2초 기다리고
-
-        //소리 재생
-        yield return new WaitForSeconds(2);
-        Destroy(gameObject);
-
+        interactable.selectEntered.RemoveListener(OnGrab);
+        interactable.selectExited.RemoveListener(OnRelease);
     }
-    //이 블록을 잡았을 때
-    //3초후 블록이 사라지고
-    //다시 재생성 되어야함
-    //
+
+    // 잡는 순간
+    private void OnGrab(SelectEnterEventArgs args)
+    {
+        rb.isKinematic = false;
+
+        // XRGrabInteractable이 자동으로 처리해주지만 확실하게 하기 위함
+    }
+
+    // 놓는 순간 
+    private void OnRelease(SelectExitEventArgs args)
+    {
+        rb.isKinematic = false; 
+        rb.useGravity = true;
+    }
 }

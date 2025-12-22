@@ -1,10 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
 public class CarControl : MonoBehaviour
 {
-    [Header("주행 설정")]
+[Header("주행 설정")]
     public bool isRunning = false;
     public float moveSpeed = 5f;
     public float turnSpeed = 5f;
@@ -22,32 +21,27 @@ public class CarControl : MonoBehaviour
 
     private float currentTurnAngle = 0f;
 
-    void Update()
+    void FixedUpdate()
     {
         if (!isRunning) return;
 
-        float horizontal = 0f;
+        // float horizontal = 0f;
         float speed = moveSpeed;
 
      
-        if (autoDrive && driveTarget != null)
-        {
-            Vector3 dir = (driveTarget.position - transform.position).normalized;
-            Vector3 localDir = transform.InverseTransformDirection(dir);
+        Vector3 dir = Vector3.forward;
 
-            horizontal = Mathf.Clamp(localDir.x * autoTurnSensitivity, -1f, 1f);
-        }
+        // float noise = (Mathf.PerlinNoise(Time.time * steeringNoiseSpeed, 0) - 0.5f) * 2f;
+        // noise *= steeringNoiseAmount;
 
-        float noise = (Mathf.PerlinNoise(Time.time * steeringNoiseSpeed, 0) - 0.5f) * 2f;
-        noise *= steeringNoiseAmount;
-
-        float targetTurn = (horizontal * turnSpeed) + noise;
-        currentTurnAngle = Mathf.Lerp(currentTurnAngle, targetTurn, Time.deltaTime * turnSmoothness);
+        // float targetTurn = (horizontal * turnSpeed) + noise;
+        // currentTurnAngle = Mathf.Lerp(currentTurnAngle, targetTurn, Time.deltaTime * turnSmoothness);
 
         transform.Rotate(0, currentTurnAngle * Time.deltaTime, 0);
 
         float speedNoise = (Mathf.PerlinNoise(Time.time * 1.2f, 10) - 0.5f) * speedNoiseAmount;
 
-        transform.position += transform.forward * (speed + speedNoise) * Time.deltaTime;
+        //transform.position += transform.forward * (speed + speedNoise) * Time.deltaTime;
+        transform.Translate(dir * (speed + speedNoise) * Time.deltaTime);
     }
 }

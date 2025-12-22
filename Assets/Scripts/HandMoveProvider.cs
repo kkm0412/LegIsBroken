@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.XR;
 using UnityEngine.InputSystem;
-using System.Collections.Generic; // 평균값 계산용
+using System.Collections.Generic;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactors;
 
@@ -14,7 +14,7 @@ public class HandMoveProvider : MonoBehaviour
     public Transform handTrackingTransform;
 
     [Tooltip("Near-far Interactor 연결")]
-    public XRBaseInteractor handInteractor;     //물건 잡을 때 작동 안하게 하기 위해서
+    public XRBaseInteractor handInteractor;
 
     [Header("Physics Options")]
     [Tooltip("이동 감도 (1.0 = 정직함, 1.5 = 빠름)")]
@@ -29,7 +29,7 @@ public class HandMoveProvider : MonoBehaviour
 
     [Header("limits")]
     public bool allowVerticalMovement = true;
-    public float maxVelocity = 20f; // 너무 빠르면 물리 뚫림 발생하므로 제한
+    public float maxVelocity = 20f; // 속도 제한
 
     [Header("GrabAbles")]
     public LayerMask grabLayer;
@@ -43,14 +43,13 @@ public class HandMoveProvider : MonoBehaviour
 
     // 던지기 방향 보정용 (평균값 계산)
     private Queue<Vector3> velocityHistory = new Queue<Vector3>();
-    [Tooltip("던지는 프레임 계산용, 이상한 방향으로 튀면 수치 높이기")]
     public int historyLength = 5; // X프레임 평균 사용
 
     private static int grabbingHandCount = 0;
 
     void Awake()
     {
-        // trackingTransform이 없으면 자기 자신(컨트롤러)을 사용
+        // 안 넣어놨을 때
         if (handTrackingTransform == null)
             currentHand = transform;
         else
@@ -75,7 +74,7 @@ public class HandMoveProvider : MonoBehaviour
 
     void Update()
     {   
-        //손에 물건 쥐고있으면 그 손으로 바닥 이동 X
+        //손에 물건 쥐고있을 때 바닥 이동 X
         if(handInteractor != null && handInteractor.hasSelection)
         {
             if (isGrabbing) EndGrab();
@@ -100,39 +99,32 @@ public class HandMoveProvider : MonoBehaviour
 
     private void ApplyClimbingLogic()
     {
-        // 손 이동량 계산
+        // 손 이동량
         Vector3 handDelta = previousHandPos - currentHand.position;
         
         if (!allowVerticalMovement) handDelta.y = 0;
 
-        // 속도 계산
+        // 속도
         Vector3 targetVelocity = (handDelta / Time.fixedDeltaTime) * sensitivity;
 
         //
-
-        // 최대 속도 제한 (튀는 거 방지)
+        //최대 속도 제한
         if (targetVelocity.magnitude > maxVelocity)
         {
             targetVelocity = targetVelocity.normalized * maxVelocity;
         }
 
-        // 바닥 체크 (발밑 0.1m 레이캐스트)
-        // LayerMask는 스크립트의 grabLayer를 재활용 or 새로 구축
         bool isFeetOnGround = Physics.Raycast(playerRigidbody.position + Vector3.up * 0.1f, Vector3.down, 0.2f, grabLayer);
         if (isFeetOnGround && targetVelocity.y < 0)
         {
-            // 아래로 가는 속도만 0으로 만듦 (앞뒤좌우는 허용)
             targetVelocity.y = 0;
         }
-        // Smoothness 값으로 조절 가능, Lerp없을시 튐, 수치 낮을시 답답함
         Vector3 smoothedVelocity = Vector3.Lerp(playerRigidbody.linearVelocity, targetVelocity, movementSmoothness);
-        //최종 속도 적용
         playerRigidbody.linearVelocity = smoothedVelocity;
-        //던지기 방향 안정화를 위해 속도 기록
         RecordVelocity(targetVelocity);
     }
 
-    void RecordVelocity(Vector3 v)     // "이상한 방향"으로 튀는 걸 막기 위해 평균 속도를 기록
+    void RecordVelocity(Vector3 v)  //평균 속도 기록용
     {
         if (velocityHistory.Count >= historyLength)
             velocityHistory.Dequeue();
@@ -158,7 +150,6 @@ public class HandMoveProvider : MonoBehaviour
         if (playerRigidbody != null)
         {
             playerRigidbody.useGravity = false;
-            // 잡는 순간 속도 줄이는 코드 삭제 -> 흐름 끊김 방지
         }
     }
 

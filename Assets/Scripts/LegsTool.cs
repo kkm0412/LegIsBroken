@@ -16,7 +16,7 @@ public class LegsTool : MonoBehaviour
     public float throwForceMultiplier = 1.5f; 
     public Rigidbody playerRigidbody;
 
-    [Header("Inputs (반드시 둘 다 할당하세요!)")]
+    [Header("Inputs")]
     [Tooltip("XRI LeftHand Interaction/Activate Value (또는 Activate)")]
     public InputActionProperty leftHandActivate;
     
@@ -70,10 +70,9 @@ public class LegsTool : MonoBehaviour
 
     void Update()
     {
-        // 1. 잡고 있을 때 (등반 로직 체크)
+        //  잡고 있을 때 (등반 로직 체크)
         if (interactable.isSelected) 
         {
-            // 붙어있는데 트리거를 놓으면 -> 떨어짐
             float triggerValue = GetCurrentTriggerValue();
             if (triggerValue < triggerThreshold && isStuck)
             {
@@ -82,7 +81,7 @@ public class LegsTool : MonoBehaviour
             return; // 잡고 있으면 아래 홀스터 로직 실행 안 함
         }
 
-        // 2. [추가됨] 안 잡고 있고 + 벽에 안 박혀 있으면 -> 홀스터로 복귀
+        // 안 잡고 있고 + 벽에 안 박혀 있으면 -> 홀스터로 복귀
         if (!isStuck) 
         {
             MoveToHolster();
@@ -141,7 +140,7 @@ public class LegsTool : MonoBehaviour
         SendHapticImpulse(1.0f, 0.2f);
         if (playerRigidbody != null) playerRigidbody.useGravity = false;
         
-        Debug.Log("⛏️ 벽에 박힘! (Stuck)");
+        Debug.Log("벽에 박힘! (Stuck)");
     }
 
     private void Unstick()
@@ -162,7 +161,7 @@ public class LegsTool : MonoBehaviour
             // 몸을 던지는 방향으로 밀기
             playerRigidbody.linearVelocity = -throwVelocity * throwForceMultiplier; 
         }
-        Debug.Log("⬇️ 벽에서 떨어짐");
+        Debug.Log("벽에서 떨어짐");
     }
 
     private void ApplyClimbingForce()
@@ -185,7 +184,7 @@ public class LegsTool : MonoBehaviour
         // 잡은 손이 왼손인지 오른손인지 판별
         if (currentInteractor != null)
         {
-            // 1. NearFarInteractor라면 내장된 Handedness 속성 확인 (가장 정확)
+            // 1. NearFarInteractor라면 내장된 Handedness 속성 확인
             if (currentInteractor is NearFarInteractor nearFar)
             {
                 isLeftHand = (nearFar.handedness == InteractorHandedness.Left);

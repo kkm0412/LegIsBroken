@@ -54,3 +54,9 @@
 - [ ] 전체적인 맵/환경 그래픽 리소스 제작
 - [ ] UI/UX 디자인 리소스 제작
 - [ ] 캐릭터 및 오브젝트 모델링/애니메이션
+
+## 사용한 리소스
+스카이박스: https://assetstore.unity.com/packages/vfx/shaders/free-skybox-extended-shader-107400
+맵 소스: https://assetstore.unity.com/packages/3d/environments/landscapes/low-poly-desert-environment-pack-333554
+도로: https://assetstore.unity.com/packages/3d/environments/roadways/low-poly-road-pack-67288
+차량: https://assetstore.unity.com/packages/3d/vehicles/land/free-pickup-273052 

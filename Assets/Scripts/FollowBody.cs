@@ -11,10 +11,10 @@ public class FollowBody : MonoBehaviour
         Quaternion targetWorldRot = bodyTarget.rotation;
 
         transform.position = targetWorldPos;
-        // transform.rotation = targetWorldRot; //회전 필요시
+        // transform.rotation = targetWorldRot; 
 
         bodyTarget.localPosition = Vector3.zero;
-        //bodyTarget.localRotation = Quaternion.identity;   //회전도 필요시에만
+        //bodyTarget.localRotation = Quaternion.identity;  
 
     }
 }
