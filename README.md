@@ -21,8 +21,11 @@
 LEGS로 잡을 수 없는 절벽을 고정시키세요!
 
 과연 절벽 위까지 다시 올라가 구조를 받을수 있을까요?
+[![Video Label](https://img.youtube.com/vi/bBZ7zgJibhI/maxresdefault.jpg)](https://www.youtube.com/watch?v=bBZ7zgJibhI)
 
-
+![1](./Images/InsideCar.png)
+![2](./Images/StartStage.png)
+![3](./Images/MainStage.png)
 
 ## 게임 플레이 방법
 (메타퀘스트3 컨트롤러 기준입니다)
